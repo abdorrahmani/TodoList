@@ -1,0 +1,14 @@
+@import 'typeface-inter';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  display: flex;
+  width: 1300px;
+  height: 1002px;
+  padding: 70px 120px;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
