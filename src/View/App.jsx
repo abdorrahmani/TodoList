@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Board from "@/components/Board/index.jsx";
 
+
 function App() {
 
   return (
