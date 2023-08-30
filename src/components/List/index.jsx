@@ -4,7 +4,8 @@ import {Droppable} from "react-beautiful-dnd";
 
 
 function List({ data, listIndex }) {
-    console.log(data)
+
+
     return (
         <>
 
@@ -13,7 +14,7 @@ function List({ data, listIndex }) {
           >
                 <div className="flex w-[300px] items-start gap-[10px] font-inter">
                     <h2 className={`flex-1  text-[15px] not-italic font-semibold leading-normal`} style={{color:`${data.color.titleColor}`}}>{data.title}</h2>
-                    <span className="text-[12px] font-medium" style={{color:`${data.color.taskColor}`}} >3 Tasks</span>
+                    <span className="text-[12px] font-medium" style={{color:`${data.color.taskColor}`}} >{data.items.length} Tasks</span>
                 </div>
                 <div className="flex flex-col items-start gap-[12px] self-stretch ">
                     <Droppable droppableId={String(listIndex)}>
