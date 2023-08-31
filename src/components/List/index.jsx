@@ -1,9 +1,41 @@
 import Item from "@/components/Item/index.jsx";
 import {Droppable} from "react-beautiful-dnd";
-
+import {useState} from "react";
+import {useDispatch} from "react-redux";
+import {addNewItem} from "@/store/sliceList.jsx";
 
 
 function List({ data, listIndex }) {
+    const [isCreating, setIsCreating] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+    const dispatch = useDispatch()
+    const handleCreateStart = () => {
+        setIsCreating(true);
+    };
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleCreateEnd = () => {
+        if (inputValue) {
+            const inputLines = inputValue.split('\n');
+            inputLines.forEach((line) => {
+                if (line.trim() !== "") {
+                    dispatch(addNewItem({ inputValue: line, listIndex }));
+                }
+            });
+
+            setInputValue("");
+        }
+        setIsCreating(false);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleCreateEnd()
+        }
+    }
 
 
     return (
@@ -31,28 +63,47 @@ function List({ data, listIndex }) {
                                         />
                                     ))}
                                     {provided.placeholder}
+                                    {(data.title == "Done 🎉") ? "": (
+                                        <>
+                                            {isCreating ? (
+                                                <textarea
+                                                    className="mt-[12px] w-[300px]"
+                                                    type="text"
+                                                    value={inputValue}
+                                                    onChange={handleInputChange}
+                                                    onBlur={handleCreateEnd}
+                                                    onKeyDown={handleKeyDown}
+                                                    placeholder="What do you want to do?"
+                                                    autoFocus
+                                                ></textarea>
+                                            ):(
+                                                <div className="flex p-[10px] flex-col items-start self-stretch rounded-[4px] text-[#D37A87]">
+                                                    <div className="flex items-center gap-[10px] self-stretch animate-pulse" onClick={handleCreateStart}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                                            <rect x="5.14285" width="1.71429" height="12" rx="0.857143" fill="#D37A87"/>
+                                                            <rect y="6.85714" width="1.71429" height="12" rx="0.857143" transform="rotate(-90 0 6.85714)" fill="#D37A87"/>
+                                                        </svg>
+                                                        <span className="text-[13px] font-semibold ">New</span>
+                                                    </div>
+                                                </div>
+
+                                            )
+
+                                            }
+                                        </>
+
+
+                                    )
+                                    }
+
                                 </ul>
                             </>
 
                         )}
                     </Droppable>
-
-
-                    <div className="flex p-[10px] flex-col items-start self-stretch rounded-[4px] text-[#D37A87]">
-                        <div className="flex items-center gap-[10px] self-stretch">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                                <rect x="5.14285" width="1.71429" height="12" rx="0.857143" fill="#D37A87"/>
-                                <rect y="6.85714" width="1.71429" height="12" rx="0.857143" transform="rotate(-90 0 6.85714)" fill="#D37A87"/>
-                            </svg>
-                            <span className="text-[13px] font-semibold ">New</span>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
-
-
 
         </>
     )

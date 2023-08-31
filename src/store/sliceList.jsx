@@ -65,16 +65,20 @@ const slice = createSlice({
         // LISTS HANDLERS
         addNewItem: (state, { payload }) => {
             {
-                state.lists[payload.index].items.push({
+                state.lists[payload.listIndex].items.push({
                     id: idGenerator(),
-                    content: payload.value
+                    completed:false,
+                    content: payload.inputValue
                 })
             }
             localStorage.setItem("@lists", JSON.stringify({ ...state }))
         },
         editItem: (state, { payload }) => {
-            state.lists[edit.listIndex].items[edit.itemIndex].content = payload
-            localStorage.setItem("@lists", JSON.stringify({ ...state }))
+            const { listIndex, index, value } = payload;
+
+            state.lists[listIndex].items[index].content = value;
+
+            localStorage.setItem("@lists", JSON.stringify({ ...state }));
         },
         deleteItem: (state, { payload }) => {
             {
