@@ -1,6 +1,12 @@
-const { renderHook, act } = require('@testing-library/react-hooks');
-const { handleCreateEnd } = require('@/components/List/index.jsx');
-const { expect, test } = require('@jest/globals');
+import React from 'react';
+import {render, screen, fireEvent, renderHook} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useDispatch } from 'react-redux';
+import { Droppable } from 'react-beautiful-dnd';
+import List from '../components/Item/index.jsx'; // Update the import path accordingly
+import { addNewItem } from '@/store/sliceList.jsx';
+import {act} from "react-test-renderer";
+
 
 test('وقتی ورودی معتبر داده می‌شود، آیتم‌های جدید اضافه می‌شوند', () => {
     const { result } = renderHook(() => handleCreateEnd());

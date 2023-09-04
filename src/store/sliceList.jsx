@@ -91,19 +91,28 @@ const slice = createSlice({
             const itemsArray = state.lists[listIndex].items;
             const currentItem = itemsArray[index];
 
-            currentItem.completed = !currentItem.completed;
+            const updateItemStatus = (item, completed) => {
+                item.completed = completed;
+            };
 
-            if (listIndex === 0) { //  "Todo"
-                currentItem.completed = false;
-                    state.lists[0].items.splice(index, 1);
-                    state.lists[1].items.push(currentItem);
-            }else if (listIndex === 1) { //  "Doing"
-                    state.lists[1].items.splice(index, 1);
-                    state.lists[2].items.push(currentItem);
-            } else if (listIndex === 2) { //  "Done"
+            // moving item
+            const moveItemToList = (state, sourceListIndex, destinationListIndex, itemIndex) => {
+                const sourceList = state.lists[sourceListIndex];
+                const destinationList = state.lists[destinationListIndex];
+                const itemToMove = sourceList.items[itemIndex];
+                sourceList.items.splice(itemIndex, 1);
+                destinationList.items.push(itemToMove);
+            };
+
+            updateItemStatus(currentItem, !currentItem.completed);
+
+            if (listIndex === 0) { // "Todo"
+                moveItemToList(state, 0, 2, index); // from Todo
+            } else if (listIndex === 1) { // "Doing"
+                moveItemToList(state, 1, 2, index); // From doing
+            } else if (listIndex === 2) { // "Done"
                 if (!currentItem.completed) {
-                    state.lists[2].items.splice(index, 1);
-                    state.lists[0].items.push(currentItem);
+                    moveItemToList(state, 2, 0, index); // From done
                 }
             }
             localStorage.setItem("@lists", JSON.stringify({ ...state }));

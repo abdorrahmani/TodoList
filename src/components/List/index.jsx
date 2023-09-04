@@ -1,6 +1,6 @@
 import Item from "@/components/Item/index.jsx";
 import {Droppable} from "react-beautiful-dnd";
-import {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {useDispatch} from "react-redux";
 import {addNewItem} from "@/store/sliceList.jsx";
 
@@ -9,6 +9,9 @@ function List({ data, listIndex }) {
     const [isCreating, setIsCreating] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const dispatch = useDispatch()
+    const memoizedIsCreating = useMemo(() => isCreating, [isCreating]);
+    const memoizedInputValue = useMemo(() => inputValue, [inputValue]);
+
     const handleCreateStart = () => {
         setIsCreating(true);
     };
@@ -18,8 +21,8 @@ function List({ data, listIndex }) {
     };
 
     const handleCreateEnd = () => {
-        if (inputValue) {
-            const inputLines = inputValue.split('\n');
+        if (memoizedInputValue) {
+            const inputLines = memoizedInputValue.split('\n');
             inputLines.forEach((line) => {
                 if (line.trim() !== "") {
                     dispatch(addNewItem({ inputValue: line, listIndex }));
@@ -31,13 +34,24 @@ function List({ data, listIndex }) {
         setIsCreating(false);
     };
 
+    const memoizedItems = useMemo(() => {
+        return data.items.map((item, index) => (
+            <Item
+                key={index}
+                listItem={item}
+                listIndex={listIndex}
+                index={index}
+            />
+        ));
+    }, [data.items, listIndex]);
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             handleCreateEnd()
         }
     }
 
-
+    console.log(1);
     return (
         <>
 
@@ -54,18 +68,11 @@ function List({ data, listIndex }) {
                             <>
                                 <ul ref={provided.innerRef} {...provided.droppableProps}>
                                     {/* eslint-disable-next-line react/prop-types */}
-                                    {data.items.map((item, index) => (
-                                        <Item
-                                            key={index}
-                                            listItem={item}
-                                            listIndex={listIndex}
-                                            index={index}
-                                        />
-                                    ))}
+                                    {memoizedItems}
                                     {provided.placeholder}
                                     {(data.title == "Done 🎉") ? "": (
                                         <>
-                                            {isCreating ? (
+                                            {memoizedIsCreating ? (
                                                 <textarea
                                                     className="mt-[12px] w-[300px]"
                                                     type="text"
@@ -109,4 +116,4 @@ function List({ data, listIndex }) {
     )
 }
 
-export default List
+export default React.memo(List);

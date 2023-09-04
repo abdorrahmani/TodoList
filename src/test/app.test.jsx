@@ -1,10 +1,7 @@
-const { createStore } = require('redux');
-const { Provider } = require('react-redux');
-const { render, fireEvent, screen } = require('@testing-library/react');
-const reducer = require('../store/sliceList.jsx').default;
-const { addNewItem } = require('../store/sliceList.jsx');
-const App = require('@/View/App.jsx').default;
-
+import React from "react";
+import { render } from "@testing-library/react";
+import { Provider } from "react-redux";
+import App from "../View/App.jsx"
 function renderWithRedux(
     ui,
     { initialState, store = createStore(reducer, initialState) } = {}
